@@ -1,0 +1,54 @@
+{% extends "courrier/base.html" %}
+
+{% block content %}
+    <h2>Liste des courriers</h2>
+
+    {% if courriers %}
+        <table border="1" cellpadding="8">
+            <thead>
+                <tr>
+                    <th>Numéro</th>
+                    <th>Type</th>
+                    <th>Objet</th>
+                    <th>Statut</th>
+                    <th>Date</th>
+                    <th>Créé par</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for courrier in courriers %}
+                    <tr>
+                        <td>{{ courrier.numero }}</td>
+                        <td>{{ courrier.type_courrier }}</td>
+                        <td>{{ courrier.objet }}</td>
+                        <td>{{ courrier.statut }}</td>
+                        <td>{{ courrier.date_courrier }}</td>
+                        <td>{{ courrier.cree_par }}</td>
+<!--                        -->
+                        <td>
+                            <a href="{% url 'detail_courrier' courrier.pk %}">Voir</a>
+                            <!-- Tout le monde peut voir le detail -->
+
+                            {% if user.is_superuser or user.role == "admin" or user.role == "secretaire" %}
+                                <!-- Admin et secretaire peuventmodifier -->
+
+                                |
+                                <a href="{% url 'modifier_courrier' courrier.pk %}">Modifier</a>
+                            {% endif %}
+
+                            {% if user.is_superuser or user.role == "admin" %}
+                                <!-- Seul admin peut supprimer -->
+
+                                |
+                                <a href="{% url 'supprimer_courrier' courrier.pk %}">Supprimer</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucun courrier enregistré.</p>
+    {% endif %}
+{% endblock %}

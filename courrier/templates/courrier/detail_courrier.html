@@ -1,0 +1,43 @@
+{% extends "courrier/base.html" %}
+
+{% block content %}
+    <h2>Détail du courrier</h2>
+
+    <p><strong>Numéro :</strong> {{ courrier.numero }}</p>
+    <p><strong>Type :</strong>  {{ courrier.get_type_courrier_display }}</p>
+    <p><strong>Objet :</strong>  {{ courrier.objet }}</p>
+    <p><strong>Référence :</strong>  {{ courrier.reference }}</p>
+    <p><strong>Date du courrier :</strong>  {{ courrier.date_courrier }}</p>
+    <p><strong>Date de réception :</strong>  {{ courrier.date_reception }}</p>
+    <p><strong>Statut :</strong>  {{ courrier.get_statut_display }}</p>
+    <p><strong>Résumé :</strong>  {{ courrier.resume }}</p>
+    <p><strong>Expéditeur :</strong>  {{ courrier.expediteur }}</p>
+    <p><strong>Destinataire :</strong> {{ courrier.destinataire }}</p>
+    <p><strong>Créé par :</strong>  {{ courrier.cree_par }}</p>
+
+    {% if courrier.fichier %}
+        <p>
+            <strong>Fichier :</strong>
+            <a href="{{ courrier.fichier.url }}">Voir le fichier</a>
+        </p>
+    {% endif %}
+
+    <p>
+        <a href="{% url 'liste_courriers' %}">Retour</a>
+        <!-- Retour vers la liste -->
+
+        {% if user.is_superuser or user.role == "admin" or user.role == "secretaire" %}
+            <!-- Admin et secretaire peuvent modifier -->
+
+            |
+            <a href="{% url 'modifier_courrier' courrier.pk %}">Modifier</a>
+        {% endif %}
+
+        {% if user.is_superuser or user.role == "admin" %}
+            <!-- Seul admin peut supprimer -->
+
+            |
+            <a href="{% url 'supprimer_courrier' courrier.pk %}">Supprimer</a>
+        {% endif %}
+    </p>
+{% endblock %}

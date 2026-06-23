@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de courrier</title>
+</head>
+<body>
+    <h1>Gestion de courrier</h1>
+
+    <nav>
+        <a href="{% url 'accueil' %}">Accueil</a> |
+        <a href="{% url 'liste_courriers' %}">Liste des courriers</a> |
+
+        <hr>
+
+        {% if user.is_superuser or user.role == "admin" or user.role == "secretaire" %}
+            <!-- Ces liens sont visibles seulement pour admin et secretaire -->
+
+            <a href="{% url 'ajouter_courrier' %}">Ajouter courrier</a> |
+            <a href="{% url 'ajouter_expediteur' %}">Ajouter expéditeur</a> |
+            <a href="{% url 'ajouter_destinataire' %}">Ajouter destinataire</a> |
+        {% endif %}
+
+        {% if messages %}
+            <!-- Verifie s'il existe des messages envoyés depuis Django -->
+
+            {% for message in messages %}
+                <!-- Parcourt chaque message disponible -->
+                <P style="color: red;">
+                    <!-- Affiche le message en rouge pour attirer l'attention -->
+
+                    {{ message }}
+                    <!-- Affiche le texte du message -->
+            </P>
+
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </nav>
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Déconnexion</button>
+        </form>
+    {% else %}
+        <a href="{% url 'login' %}">Connexion</a>
+    {% endif %}
+</body>
+</html>

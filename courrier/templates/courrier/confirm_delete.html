@@ -1,0 +1,36 @@
+{% extends "courrier/base.html" %}
+
+{% block content %}
+
+    <h2>Supprimer le courrier</h2>
+
+    <p>
+        Voulez-vous vraiment supprimer le courrier
+        <strong>{{ courrier.numero }} - {{ courrier.objet }}</strong> ?
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <button type="submit">Oui, supprimer</button>
+
+        <a href="{% url 'detail_courrier' courrier.pk %}">Annuler</a>
+    </form>
+
+<script>
+    // On récupère le formulaire de suppression.
+    const form = document.querySelector("form");
+
+    // Quand l'utilisateur clique sur le bouton supprimer.
+    form.addEventListener("submit", function (event) {
+        // On affiche une confirmation.
+        const confirmation = confirm("Confirmer la suppression de ce courrier ?");
+
+        // Si l'utilisateur clique sur Annuler, on bloque la suppression.
+        if (!confirmation) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+{% endblock %}
